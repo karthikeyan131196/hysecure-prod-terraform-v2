@@ -65,6 +65,5 @@ variable "instance_az_map" {
     active  = "ap-south-1a"
     standby = "ap-south-1b"
     real-1 = "ap-south-1a"
-    #real-2 = "ap-south-1b"
   }
 }

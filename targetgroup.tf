@@ -35,9 +35,7 @@ locals {
   }
 }
 
-############################################
 # CREATE TARGET GROUPS (LOOP)
-############################################
 
 resource "aws_lb_target_group" "tg" {
   for_each = local.target_groups
@@ -70,9 +68,7 @@ resource "aws_lb_target_group" "tg" {
   })
 }
 
-############################################
 # ATTACHMENTS - HTTPS (ALL NODES)
-############################################
 
 resource "aws_lb_target_group_attachment" "https" {
   for_each = aws_instance.nodes
@@ -82,9 +78,7 @@ resource "aws_lb_target_group_attachment" "https" {
   port             = 443
 }
 
-############################################
 # ATTACHMENTS - DB (ONLY active + standby)
-############################################
 
 resource "aws_lb_target_group_attachment" "db" {
   for_each = {
@@ -97,9 +91,7 @@ resource "aws_lb_target_group_attachment" "db" {
   port             = 3306
 }
 
-############################################
 # ATTACHMENTS - INFO (ONLY active + standby)
-############################################
 
 resource "aws_lb_target_group_attachment" "info" {
   for_each = {

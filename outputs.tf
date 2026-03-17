@@ -1,3 +1,4 @@
+# VPC & SUBNET ID
 output "vpc_id" {
   value = aws_vpc.hysecure_vpc.id
 }
@@ -9,13 +10,13 @@ output "subnet_ids" {
   ]
 }
 
+# SECURITY GROUP NAME
+
 output "security_group_id" {
   value = aws_security_group.hysecure_sg.id
 }
 
-############################################
-# UPDATED INSTANCE OUTPUTS
-############################################
+# EC2 INSTANCE OUTPUTS
 
 output "instance_ids" {
   value = {
@@ -31,7 +32,7 @@ output "private_ips" {
   }
 }
 
-############################################
+# VIP IP OUTPUT 
 
 output "private_key_location" {
   value = "hysecure-key.pem created in Terraform folder"
@@ -45,6 +46,8 @@ output "vip_ips_by_az" {
     (aws_subnet.az1b.availability_zone) = aws_network_interface.vip_az1b.private_ip
   }
 }
+
+# NLB DNS NAME
 
 output "internal_nlb_by_az" {
   description = "Internal NLB DNS and IP per AZ"

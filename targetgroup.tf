@@ -1,41 +1,32 @@
-############################################
-# TARGET GROUPS
-############################################
-
 locals {
   target_groups = {
     https = {
-      port     = 443
-      protocol = "TCP"
-      health = {
-        protocol = "HTTPS"
-        path     = "/hapage.html"
-        port     = "443"
-      }
+      port            = 443
+      protocol        = "TCP"
+      health_protocol = "HTTPS"
+      health_path     = "/hapage.html"
+      health_port     = 443
     }
 
     db = {
-      port     = 3306
-      protocol = "TCP"
-      health = {
-        protocol = "TCP"
-        port     = "3306"
-      }
+      port            = 3306
+      protocol        = "TCP"
+      health_protocol = "HTTPS"
+      health_path     = "/statuscheck"
+      health_port     = 443
     }
 
     info = {
-      port     = 939
-      protocol = "TCP"
-      health = {
-        protocol = "HTTPS"
-        path     = "/statuscheck"
-        port     = "443"
-      }
+      port            = 939
+      protocol        = "TCP"
+      health_protocol = "HTTPS"
+      health_path     = "/statuscheck"
+      health_port     = 443
     }
   }
 }
 
-# CREATE TARGET GROUPS (LOOP)
+# CREATE TARGET GROUPS
 
 resource "aws_lb_target_group" "tg" {
   for_each = local.target_groups
@@ -44,28 +35,30 @@ resource "aws_lb_target_group" "tg" {
   port        = each.value.port
   protocol    = each.value.protocol
   target_type = "ip"
+  vpc_id      = aws_vpc.hysecure_vpc.id
 
-  vpc_id = aws_vpc.hysecure_vpc.id
-
-  dynamic "health_check" {
-    for_each = [each.value.health]
-
-    content {
-      protocol = health_check.value.protocol
-      port     = health_check.value.port
-
-      path = lookup(health_check.value, "path", null)
-
-      healthy_threshold   = 5
-      unhealthy_threshold = 2
-      interval            = 30
-      timeout             = 5
-    }
+  health_check {
+    protocol            = each.value.health_protocol
+    port                = each.value.health_port
+    path                = each.value.health_path
+    healthy_threshold   = 5
+    unhealthy_threshold = 2
+    interval            = 30
+    timeout             = 5
   }
 
   tags = merge(local.common_tags, {
     Name = "${var.project_name}-tg-${each.key}"
   })
+}
+
+# FILTER ACTIVE + STANDBY
+
+locals {
+  internal_nodes = {
+    for k, v in aws_instance.nodes :
+    k => v if contains(["active", "standby"], k)
+  }
 }
 
 # ATTACHMENTS - HTTPS (ALL NODES)
@@ -81,10 +74,7 @@ resource "aws_lb_target_group_attachment" "https" {
 # ATTACHMENTS - DB (ONLY active + standby)
 
 resource "aws_lb_target_group_attachment" "db" {
-  for_each = {
-    for k, v in aws_instance.nodes :
-    k => v if contains(["active","standby"], k)
-  }
+  for_each = local.internal_nodes
 
   target_group_arn = aws_lb_target_group.tg["db"].arn
   target_id        = each.value.private_ip
@@ -94,10 +84,7 @@ resource "aws_lb_target_group_attachment" "db" {
 # ATTACHMENTS - INFO (ONLY active + standby)
 
 resource "aws_lb_target_group_attachment" "info" {
-  for_each = {
-    for k, v in aws_instance.nodes :
-    k => v if contains(["active","standby"], k)
-  }
+  for_each = local.internal_nodes
 
   target_group_arn = aws_lb_target_group.tg["info"].arn
   target_id        = each.value.private_ip

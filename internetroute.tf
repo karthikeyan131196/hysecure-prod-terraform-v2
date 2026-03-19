@@ -9,7 +9,6 @@ resource "aws_internet_gateway" "igw" {
   })
 }
 
-
 # Public Route Table
 
 resource "aws_route_table" "public_rt" {

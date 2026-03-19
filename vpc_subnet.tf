@@ -33,7 +33,6 @@ resource "aws_subnet" "az1b" {
   })
 }
 
-
 # VIP ENI - AZ1A 
 
 resource "aws_network_interface" "vip_az1a" {

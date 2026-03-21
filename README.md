@@ -88,7 +88,7 @@ Two subnets are created across different Availability Zones.
 
 ## EC2 Instances
 
-Number of vm , instance type , vm size , Hysecure AMI , key pair , project name is defined in **variables.tf**.
+Number of vm , instance type , vm size , Hysecure AMI , key pair , project name is defined in **terraform.tfvar**.
 
 Three HySecure nodes are deployed.
 

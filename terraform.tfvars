@@ -10,9 +10,6 @@ subnet_az1b_cidr  = "10.10.2.0/24"
 instance_type     = "t3.small"
 root_volume_size  = 65
 
-# Define key pair name
-key_pair_name     = "hysecure-key"
-
 # Define project name used for resource naming and tagging
 project_name      = "hysecure-prod"
 

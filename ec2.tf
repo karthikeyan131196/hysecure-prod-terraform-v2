@@ -13,7 +13,7 @@ resource "local_file" "hysecure_pem" {
 # AWS Key Pair
 
 resource "aws_key_pair" "hysecure_key" {
-  key_name   = "${var.project_name}"- key
+  key_name   = "${var.project_name}-key"
   public_key = tls_private_key.hysecure_key.public_key_openssh
 }
 
@@ -29,6 +29,12 @@ resource "aws_ami_copy" "hysecure" {
   name              = "hysecure-${var.aws_region}"
   source_ami_id     = var.source_ami_id
   source_ami_region = "ap-south-1"
+
+  description = "HySecure AMI copied to ${var.aws_region}"
+
+  tags = {
+    Name = "hysecure-${var.aws_region}"
+  }
 }
 
 resource "aws_instance" "nodes" {
@@ -39,7 +45,7 @@ resource "aws_instance" "nodes" {
   subnet_id                   = local.subnet_by_az[each.value]
   vpc_security_group_ids      = [aws_security_group.hysecure_sg.id]
 
-  key_name                    = var.key_pair_name
+  key_name                    = aws_key_pair.hysecure_key.key_name
   associate_public_ip_address = false
 
   root_block_device {

@@ -1,5 +1,5 @@
 # Define the AWS region where the infrastructure will be created
-aws_region        = "ap-south-1"
+aws_region        = "us-east-1"
 
 # Define VPC and subnet CIDR ranges
 vpc_cidr          = "10.10.0.0/16"
@@ -18,7 +18,7 @@ project_name      = "hysecure-prod"
 # - 'active' and 'standby' nodes name must retain same, as these names are used in loops for target group creation
 # - Additional nodes (e.g., real-1) can be added with any name; corresponding VMs will be created accordingly
 instance_az_map = {
-  active  = "ap-south-1a"
-  standby = "ap-south-1b"
-  real-1  = "ap-south-1a"
+  active  = "us-east-1a"
+  standby = "us-east-1b"
+  real-1  = "us-east-1a"
 }

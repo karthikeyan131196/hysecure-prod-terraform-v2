@@ -9,7 +9,7 @@ locals {
 #Avalilable zone
 locals {
   subnet_by_az = {
-    "ap-south-1a" = aws_subnet.az1a.id
-    "ap-south-1b" = aws_subnet.az1b.id
+    "${var.aws_region}a" = aws_subnet.az1a.id
+    "${var.aws_region}b" = aws_subnet.az1b.id
   }
 }

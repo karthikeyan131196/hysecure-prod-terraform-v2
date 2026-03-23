@@ -34,16 +34,6 @@ variable "root_volume_size" {
   type        = number
 }
 
-variable "ami_id" {
-  description = "HySecure AMI"
-  type        = string
-}
-
-variable "key_pair_name" {
-  description = "Key pair name"
-  type        = string
-}
-
 variable "project_name" {
   type = string
 }

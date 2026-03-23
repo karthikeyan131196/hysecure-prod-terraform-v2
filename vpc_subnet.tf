@@ -16,7 +16,7 @@ resource "aws_vpc" "hysecure_vpc" {
 resource "aws_subnet" "az1a" {
   vpc_id            = aws_vpc.hysecure_vpc.id
   cidr_block        = var.subnet_az1a_cidr
-  availability_zone = "ap-south-1a"
+  availability_zone = "${var.aws_region}a"
 
   tags = merge(local.common_tags, {
     Name = "${var.project_name}-subnet-az1a"
@@ -26,7 +26,7 @@ resource "aws_subnet" "az1a" {
 resource "aws_subnet" "az1b" {
   vpc_id            = aws_vpc.hysecure_vpc.id
   cidr_block        = var.subnet_az1b_cidr
-  availability_zone = "ap-south-1b"
+  availability_zone = "${var.aws_region}b"
 
   tags = merge(local.common_tags, {
     Name = "${var.project_name}-subnet-az1b"

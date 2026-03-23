@@ -1,4 +1,4 @@
-# Define the AWS region where the infrastructure will be created
+# Define the AWS region where the infrastructure will be created for production environment
 aws_region        = "us-east-1"
 
 # Define VPC and subnet CIDR ranges
@@ -6,7 +6,7 @@ vpc_cidr          = "10.10.0.0/16"
 subnet_az1a_cidr  = "10.10.1.0/24"
 subnet_az1b_cidr  = "10.10.2.0/24"
 
-# Define instance type and root volume size
+# Define instance type and root volume size for EC2 instances
 instance_type     = "t3.small"
 root_volume_size  = 65
 

@@ -1,17 +1,25 @@
+# Define the AWS region where the infrastructure will be created
 aws_region        = "ap-south-1"
 
+# Define VPC and subnet CIDR ranges
 vpc_cidr          = "10.10.0.0/16"
 subnet_az1a_cidr  = "10.10.1.0/24"
 subnet_az1b_cidr  = "10.10.2.0/24"
 
+# Define instance type and root volume size
 instance_type     = "t3.small"
 root_volume_size  = 65
 
-ami_id            = "ami-0caa6d72e7d3af20d"
+# Define key pair name
 key_pair_name     = "hysecure-key"
 
+# Define project name used for resource naming and tagging
 project_name      = "hysecure-prod"
 
+# Define the nodes to be created along with their respective Availability Zones
+# Note:
+# - 'active' and 'standby' nodes name must retain same, as these names are used in loops for target group creation
+# - Additional nodes (e.g., real-1) can be added with any name; corresponding VMs will be created accordingly
 instance_az_map = {
   active  = "ap-south-1a"
   standby = "ap-south-1b"

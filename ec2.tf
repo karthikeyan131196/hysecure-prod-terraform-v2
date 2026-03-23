@@ -6,14 +6,14 @@ resource "tls_private_key" "hysecure_key" {
 }
 resource "local_file" "hysecure_pem" {
   content         = tls_private_key.hysecure_key.private_key_pem
-  filename        = "${path.module}/hysecure-key.pem"
+  filename        = "${path.module}/${var.project_name}-key.pem"
   file_permission = "0400"
 }
 
 # AWS Key Pair
 
 resource "aws_key_pair" "hysecure_key" {
-  key_name   = var.key_pair_name
+  key_name   = "${var.project_name}"- key
   public_key = tls_private_key.hysecure_key.public_key_openssh
 }
 

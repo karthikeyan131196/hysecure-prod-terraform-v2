@@ -19,10 +19,22 @@ resource "aws_key_pair" "hysecure_key" {
 
 #AWS Ec2
 
+locals {
+  use_source_ami = var.aws_region == "ap-south-1"
+}
+
+resource "aws_ami_copy" "hysecure" {
+  count = local.use_source_ami ? 0 : 1
+
+  name              = "hysecure-${var.aws_region}"
+  source_ami_id     = var.source_ami_id
+  source_ami_region = "ap-south-1"
+}
+
 resource "aws_instance" "nodes" {
   for_each = var.instance_az_map
 
-  ami                         = var.ami_id
+  ami                         = local.use_source_ami ? var.source_ami_id : aws_ami_copy.hysecure[0].id
   instance_type               = var.instance_type
   subnet_id                   = local.subnet_by_az[each.value]
   vpc_security_group_ids      = [aws_security_group.hysecure_sg.id]

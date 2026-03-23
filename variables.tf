@@ -3,6 +3,12 @@ variable "aws_region" {
   type        = string
 }
 
+variable "source_ami_id" {
+  description = "AMI ID from Mumbai Region"
+  type = string
+  default     = "ami-0caa6d72e7d3af20d"
+}
+
 variable "vpc_cidr" {
   description = "VPC CIDR block"
   type        = string

@@ -69,5 +69,8 @@ resource "aws_instance" "nodes" {
     Role = each.key
   })
 
-  depends_on = [aws_key_pair.hysecure_key]
+  depends_on = [
+    aws_key_pair.hysecure_key,
+    aws_ami_copy.hysecure
+    ]
 }

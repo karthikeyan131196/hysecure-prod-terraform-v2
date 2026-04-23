@@ -21,6 +21,62 @@ This setup provides **high availability HySecure deployment across multiple avai
 
 ---
 
+## Dynamic VM Deployment
+
+This Terraform configuration supports **dynamic VM creation** based on values defined in **terraform.tfvars**.
+
+- Number of VMs is controlled via variables  
+- Instances are distributed across Availability Zones  
+- Deployment will proceed only if the **AZ mapping condition is satisfied**  
+
+This ensures:
+- Proper **multi-AZ high availability**
+- Balanced infrastructure deployment
+
+---
+
+## AMI Copy Across Regions
+
+HySecure AMI is primarily available in **Mumbai region (ap-south-1)**.
+
+If a different region is specified in **terraform.tfvars**, the following happens automatically:
+
+- AMI is copied from **ap-south-1 (Mumbai)** to the target region  
+- Deployment uses the copied AMI in the selected region  
+
+This enables:
+- **Region-independent deployment**
+- Consistent HySecure image usage across environments
+
+---
+
+## Node Identification (Important)
+
+Active and Standby are identified using **instance naming conventions** defined in Terraform.
+
+This is critical because:
+
+- Target Groups use instance identification to register nodes  
+- Internal NLB specifically requires:
+  - Active 
+  - Standby   
+
+### Behavior:
+
+- Instance names determine node role:
+  - Active 
+  - Standby 
+- These names are used to:
+  - Attach instances to **internal target groups**
+  - Ensure correct **cluster communication routing**
+
+⚠️ Important:
+Incorrect naming may result in:
+- Nodes not being added to target groups
+- Internal communication failure
+
+---
+
 # Architecture
 Internet
 │
@@ -69,13 +125,13 @@ hysecure-prod-terraform
 ## VPC
 Creates a dedicated VPC for HySecure deployment.
 
-CIDR block is defined in **variables.tf**.
+CIDR block is defined in **terraform.tfvar**.
 
 ---
 
 ## Subnets
 
-CIDR block is defined in **variables.tf**.
+CIDR block is defined in **terraform.tfvar**.
 
 Two subnets are created across different Availability Zones.
 
@@ -106,6 +162,66 @@ Instance configuration:
 
 ---
 
+## Target Groups and Listeners
+
+Three target groups are created in this setup:
+
+### 1. User Login Target Group
+
+Port: **443**  
+Attached to: **External Network Load Balancer**
+
+Targets:
+- Active Node  
+- Standby Node  
+- Real Node  
+
+Used for user login traffic.
+
+---
+
+### 2. Database Target Group
+
+Port: **3306**  
+Attached to: **Internal Network Load Balancer**
+
+Targets:
+- Active Node  
+- Standby Node  
+
+Used for database communication between cluster nodes.
+
+---
+
+### 3. InfoAgent Target Group
+
+Port: **939**  
+Attached to: **Internal Network Load Balancer**
+
+Targets:
+- Active Node  
+- Standby Node  
+
+Used for cluster communication.
+
+---
+
+## Listeners
+
+### External Listener
+
+Port: **443**  
+Forwarded to: **User Login Target Group**
+
+---
+
+### Internal Listeners
+
+| Port | Target Group        | Purpose               |
+|------|---------------------|-----------------------|
+| 3306 | Database Target TG  | Database communication|
+| 939  | InfoAgent Target TG | Cluster communication |
+
 # Load Balancers
 
 ## External Network Load Balancer
@@ -115,7 +231,7 @@ Used for **user login traffic**
 Port: **443**  
 Protocol: **TCP**
 
-Routes traffic to HySecure nodes.
+Routes traffic to All HySecure nodes.
 
 ---
 
@@ -127,6 +243,8 @@ Used for **internal cluster communication**
 |----  |----      |
 | 3306 | Database |
 | 939  | InfoAgent|
+
+Routes traffic between Active and Standby nodes.
 
 ---
 

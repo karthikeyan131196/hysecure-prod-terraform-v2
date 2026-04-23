@@ -290,19 +290,86 @@ Check versions:
 
 terraform -v
 aws --version
+---
 
-# Configure AWS Credentials
+## IAM Policy Setup 
 
+This repository includes required IAM policy JSON files:
+
+- hysecure-infra-policy.json
+- hysecure-ami-copy-policy.json
+
+Users must create IAM policies using these files.
+
+---
+
+## Steps to Create IAM Policies
+
+1. Login to AWS Console  
+
+2. Go to:  
+   IAM → Policies → Create Policy  
+
+3. Select **JSON** tab  
+
+4. Copy content from:
+
+   - hysecure-infra-policy.json  
+   - Paste and create policy  
+   - Name: hysecure-infra-policy  
+
+---
+
+5. (Optional – Only for cross-region deployment)
+
+   - Copy content from: hysecure-ami-copy-policy.json  
+   - Create policy  
+   - Name: hysecure-ami-copy-policy  
+
+---
+
+## Create IAM User
+
+1. Go to:  
+   IAM → Users → Create User  
+
+2. User Details:
+   - Username: terraform-hysecure-user  
+   - Access Type: Programmatic access  
+
+---
+
+3. Attach Policies:
+
+   - Always attach:
+     - hysecure-infra-policy  
+
+   - Attach additionally (only if region ≠ ap-south-1):
+     - hysecure-ami-copy-policy  
+
+---
+
+4. Create user and download:
+
+- Access Key ID  
+- Secret Access Key  
+
+---
+
+## Configure AWS CLI
+
+Run:
 
 aws configure
 
-[default]
-aws_access_key_id = AKIAxxxxxxxxxxxx
-aws_secret_access_key = xxxxxxxxxxxxx
+Enter:
 
-[default]
-region = ap-south-1
-output = json
+AWS Access Key ID = <your-access-key>  
+AWS Secret Access Key = <your-secret-key>  
+Region = ap-south-1  
+Output = json  
+
+---
 
 # Verify Configuration
 

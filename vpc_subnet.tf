@@ -41,21 +41,29 @@ resource "aws_vpc" "hysecure_vpc" {
 #################################################
 
 locals {
-  vpc_id = var.existing_vpc_id != "" ?
-    data.aws_vpc.existing[0].id :
-    aws_vpc.hysecure_vpc[0].id
+  vpc_id = (
+    var.existing_vpc_id != ""
+    ? data.aws_vpc.existing[0].id
+    : aws_vpc.hysecure_vpc[0].id
+  )
 
-  effective_vpc_cidr = var.existing_vpc_id != "" ?
-    data.aws_vpc.existing[0].cidr_block :
-    var.vpc_cidr
+  effective_vpc_cidr = (
+    var.existing_vpc_id != ""
+    ? data.aws_vpc.existing[0].cidr_block
+    : var.vpc_cidr
+  )
 
-  subnet_az1a_id = var.existing_subnet_az1a_id != "" ?
-    data.aws_subnet.existing_az1a[0].id :
-    aws_subnet.az1a[0].id
+  subnet_az1a_id = (
+    var.existing_subnet_az1a_id != ""
+    ? data.aws_subnet.existing_az1a[0].id
+    : aws_subnet.az1a[0].id
+  )
 
-  subnet_az1b_id = var.existing_subnet_az1b_id != "" ?
-    data.aws_subnet.existing_az1b[0].id :
-    aws_subnet.az1b[0].id
+  subnet_az1b_id = (
+    var.existing_subnet_az1b_id != ""
+    ? data.aws_subnet.existing_az1b[0].id
+    : aws_subnet.az1b[0].id
+  )
 }
 
 #################################################

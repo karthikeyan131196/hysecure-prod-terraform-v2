@@ -18,7 +18,7 @@ resource "aws_key_pair" "hysecure_key" {
   public_key = tls_private_key.hysecure_key.public_key_openssh
 }
 
-# AWS EC2
+# AMI Handling
 
 locals {
   use_source_ami = var.aws_region == "ap-south-1"
@@ -38,23 +38,26 @@ resource "aws_ami_copy" "hysecure" {
   }
 }
 
-# Available zone
+# Available Zones
+
 locals {
   subnet_by_az = {
-    "${var.aws_region}a" = aws_subnet.az1a.id
-    "${var.aws_region}b" = aws_subnet.az1b.id
+    "${var.aws_region}a" = local.subnet_az1a_id
+    "${var.aws_region}b" = local.subnet_az1b_id
   }
 
   final_ami_id = local.use_source_ami ? var.source_ami_id : aws_ami_copy.hysecure["copy"].id
 }
 
+# EC2 Instances
+
 resource "aws_instance" "nodes" {
   for_each = var.instance_az_map
-  
-  ami                         = local.final_ami_id
-  instance_type               = var.instance_type
-  subnet_id                   = local.subnet_by_az[each.value]
-  vpc_security_group_ids      = [aws_security_group.hysecure_sg.id]
+
+  ami                    = local.final_ami_id
+  instance_type          = var.instance_type
+  subnet_id              = local.subnet_by_az[each.value]
+  vpc_security_group_ids = [aws_security_group.hysecure_sg.id]
 
   key_name                    = aws_key_pair.hysecure_key.key_name
   associate_public_ip_address = false
@@ -72,5 +75,5 @@ resource "aws_instance" "nodes" {
   depends_on = [
     aws_key_pair.hysecure_key,
     aws_ami_copy.hysecure
-    ]
+  ]
 }

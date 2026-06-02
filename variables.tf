@@ -41,3 +41,17 @@ variable "project_name" {
 variable "instance_az_map" {
   type = map(string)
 }
+variable "existing_vpc_id" {
+  type    = string
+  default = ""
+}
+
+variable "existing_subnet_az1a_id" {
+  type    = string
+  default = ""
+}
+
+variable "existing_subnet_az1b_id" {
+  type    = string
+  default = ""
+}

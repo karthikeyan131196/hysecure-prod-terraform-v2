@@ -6,6 +6,11 @@ vpc_cidr          = "10.10.0.0/16"
 subnet_az1a_cidr  = "10.10.1.0/24"
 subnet_az1b_cidr  = "10.10.2.0/24"
 
+# Existing VPC and Subnet IDs
+existing_vpc_id         = ""
+existing_subnet_az1a_id = ""
+existing_subnet_az1b_id = ""
+
 # Define instance type and root volume size for EC2 instances
 instance_type     = "t3.small"
 root_volume_size  = 65

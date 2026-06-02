@@ -1,9 +1,11 @@
 resource "aws_security_group" "hysecure_sg" {
   name        = "${var.project_name}-sg"
   description = "HySecure Security Group"
-  vpc_id      = aws_vpc.hysecure_vpc.id
+  vpc_id      = local.vpc_id
 
-  # TCP INBOUND 
+  #################################################
+  # TCP INBOUND
+  #################################################
 
   ingress {
     from_port   = 443
@@ -28,12 +30,14 @@ resource "aws_security_group" "hysecure_sg" {
       from_port   = ingress.key
       to_port     = ingress.key
       protocol    = "tcp"
-      cidr_blocks = [var.vpc_cidr]
+      cidr_blocks = [local.effective_vpc_cidr]
       description = ingress.value
     }
   }
 
-  # UDP INBOUND 
+  #################################################
+  # UDP INBOUND
+  #################################################
 
   dynamic "ingress" {
     for_each = {
@@ -45,12 +49,14 @@ resource "aws_security_group" "hysecure_sg" {
       from_port   = ingress.key
       to_port     = ingress.key
       protocol    = "udp"
-      cidr_blocks = [var.vpc_cidr]
+      cidr_blocks = [local.effective_vpc_cidr]
       description = ingress.value
     }
   }
 
-  # OUTBOUND 
+  #################################################
+  # OUTBOUND
+  #################################################
 
   egress {
     from_port   = 0

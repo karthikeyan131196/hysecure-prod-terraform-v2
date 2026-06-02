@@ -35,7 +35,7 @@ resource "aws_lb_target_group" "tg" {
   port        = each.value.port
   protocol    = each.value.protocol
   target_type = "ip"
-  vpc_id      = aws_vpc.hysecure_vpc.id
+  vpc_id      = local.vpc_id
 
   health_check {
     protocol            = each.value.health_protocol

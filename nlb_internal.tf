@@ -1,4 +1,3 @@
-
 # Internal Network Load Balancer
 
 resource "aws_lb" "internal_nlb" {
@@ -8,14 +7,14 @@ resource "aws_lb" "internal_nlb" {
   ip_address_type    = "ipv4"
 
   subnets = [
-    aws_subnet.az1a.id,
-    aws_subnet.az1b.id
+    local.subnet_az1a_id,
+    local.subnet_az1b_id
   ]
 
   enable_cross_zone_load_balancing = true
 
-tags = merge(local.common_tags, {
-Name = "${var.project_name}-internal-lb"
+  tags = merge(local.common_tags, {
+    Name = "${var.project_name}-internal-lb"
   })
 }
 

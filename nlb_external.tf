@@ -1,4 +1,3 @@
-
 # External Network Load Balancer
 
 resource "aws_lb" "external_nlb" {
@@ -8,19 +7,18 @@ resource "aws_lb" "external_nlb" {
   ip_address_type    = "ipv4"
 
   subnets = [
-    aws_subnet.az1a.id,
-    aws_subnet.az1b.id
+    local.subnet_az1a_id,
+    local.subnet_az1b_id
   ]
 
   enable_cross_zone_load_balancing = true
 
-    tags = merge(local.common_tags, {
+  tags = merge(local.common_tags, {
     Name = "${var.project_name}-external-lb"
   })
 }
 
-
-# Listener - User-Login (443)
+# Listener - User Login (443)
 
 resource "aws_lb_listener" "listener_https" {
   load_balancer_arn = aws_lb.external_nlb.arn

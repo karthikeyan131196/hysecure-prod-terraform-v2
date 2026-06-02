@@ -1,6 +1,4 @@
-#################################################
 # EXISTING VPC / SUBNET LOOKUP
-#################################################
 
 data "aws_vpc" "existing" {
   count = var.existing_vpc_id != "" ? 1 : 0
@@ -20,9 +18,7 @@ data "aws_subnet" "existing_az1b" {
   id = var.existing_subnet_az1b_id
 }
 
-#################################################
 # CREATE VPC (ONLY IF NOT PROVIDED)
-#################################################
 
 resource "aws_vpc" "hysecure_vpc" {
   count = var.existing_vpc_id == "" ? 1 : 0
@@ -36,9 +32,7 @@ resource "aws_vpc" "hysecure_vpc" {
   })
 }
 
-#################################################
 # LOCAL VALUES
-#################################################
 
 locals {
   vpc_id = (
@@ -66,9 +60,7 @@ locals {
   )
 }
 
-#################################################
 # CREATE SUBNETS (ONLY IF NOT PROVIDED)
-#################################################
 
 resource "aws_subnet" "az1a" {
   count = var.existing_subnet_az1a_id == "" ? 1 : 0
@@ -94,9 +86,7 @@ resource "aws_subnet" "az1b" {
   })
 }
 
-#################################################
 # VIP ENI - AZ1A
-#################################################
 
 resource "aws_network_interface" "vip_az1a" {
   subnet_id       = local.subnet_az1a_id
@@ -107,9 +97,7 @@ resource "aws_network_interface" "vip_az1a" {
   })
 }
 
-#################################################
 # VIP ENI - AZ1B
-#################################################
 
 resource "aws_network_interface" "vip_az1b" {
   subnet_id       = local.subnet_az1b_id

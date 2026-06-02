@@ -1,6 +1,4 @@
-#################################################
 # CREATE NETWORKING ONLY FOR NEW VPC
-#################################################
 
 resource "aws_internet_gateway" "igw" {
   count  = var.existing_vpc_id == "" ? 1 : 0

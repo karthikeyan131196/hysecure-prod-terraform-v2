@@ -1,6 +1,4 @@
-#################################################
 # VPC & SUBNET IDs
-#################################################
 
 output "vpc_id" {
   value = local.vpc_id
@@ -13,17 +11,13 @@ output "subnet_ids" {
   ]
 }
 
-#################################################
 # SECURITY GROUP
-#################################################
 
 output "security_group_id" {
   value = aws_security_group.hysecure_sg.id
 }
 
-#################################################
 # EC2 INSTANCES
-#################################################
 
 output "instance_ids" {
   value = {
@@ -39,17 +33,13 @@ output "private_ips" {
   }
 }
 
-#################################################
 # PRIVATE KEY
-#################################################
 
 output "private_key_location" {
   value = "hysecure-key.pem created in Terraform folder"
 }
 
-#################################################
 # VIP IPs
-#################################################
 
 output "vip_ips_by_az" {
   description = "VIP private IP mapped to Availability Zone"
@@ -60,9 +50,7 @@ output "vip_ips_by_az" {
   }
 }
 
-#################################################
 # INTERNAL NLB
-#################################################
 
 output "internal_nlb_by_az" {
   description = "Internal NLB DNS"
@@ -72,9 +60,7 @@ output "internal_nlb_by_az" {
   }
 }
 
-#################################################
 # EXTERNAL NLB
-#################################################
 
 output "external_nlb_by_az" {
   description = "External NLB DNS"
